@@ -1,17 +1,48 @@
 <template>
   <div class="home">
-    <p>Welcome to your reddit clone!</p>
-    <div class="progress green lighten-3">
-      <div class="indeterminate green">"Loading"</div>
+    <div v-if="postsState.loading" class="progress orange">
+      <div class="indeterminate orange"></div>
     </div>
-    <div class="card red accent-1">
+    <div v-if="postsState.error" class="card red accent-1">
       <div class="card-content white-text">
-        <span class="card-title">error</span>
+        <span class="card-title">{{ postsState.error }}</span>
       </div>
+    </div>
+    <div class="row">
+      <RedditPost v-for="post in posts" :key="post.id" :post="post" />
     </div>
   </div>
 </template>
 
-<script></script>
+<script>
+import usePosts from "../hooks/usePosts";
+import { computed } from "vue";
+import RedditPost from "./RedditPost.vue";
 
-<style></style>
+export default {
+  components: {
+    RedditPost,
+  },
+  setup() {
+    const postsState = usePosts({ value: "aww" });
+    const posts = computed(() => postsState.data.map((child) => child.data));
+
+    return {
+      postsState,
+      posts,
+    };
+  },
+};
+</script>
+<style>
+s .post {
+  height: 100%;
+}
+.progress {
+  width: 50%;
+}
+
+.video {
+  width: 50%;
+}
+</style>
